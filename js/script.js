@@ -5,11 +5,14 @@ let ctx = canvas.getContext("2d");
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
-//#region CONSTANTS
-const GRID_SIZE = 50;
-//#endregion
+//region CONSTANTS
+const GRID_SIZE = 20;
+const SLIPERINESS = 0.3;
+const PARTCLE_COUNT = 10000;
+const SPEED = 5;
+//endregion
 
-//#region VARIABLES
+//region VARIABLES
 // mouse
 let mouseX = 0;
 let mouseY = 0;
@@ -17,7 +20,7 @@ let mouseY = 0;
 // vectors
 noise.seed(Math.random());
 let vectors = [];
-let perlinZoom = 0.03;
+let perlinZoom = 0.01;
 for (let y = 0; y <= Math.ceil(canvas.height / GRID_SIZE); y++) {
     let newLine = [];
     for (let x = 0; x <= Math.ceil(canvas.width / GRID_SIZE); x++) {
@@ -26,17 +29,18 @@ for (let y = 0; y <= Math.ceil(canvas.height / GRID_SIZE); y++) {
     vectors.push(newLine);
 }
 
-let particles = [
-    {
-        x: 100,
-        y: 100,
+let particles = [];
+for (let i = 0; i < PARTCLE_COUNT; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
         velocityX: 0,
         velocityY: 0
-    }
-];
-//#endregion
+    });
+}
+//endregion
 
-//#region FUNCTIONS
+//region FUNCTIONS
 function Distance(x1, y1, x2, y2) {
     return Math.sqrt(Math.abs(x1 - x2)**2 + Math.abs(y1 - y2)**2);
 }
@@ -67,16 +71,27 @@ function forceAtPoint(x, y) {
         y: yValue
     }
 }
-//#endregion
+//endregion
 
 setInterval(() => {
-    // resize canvas
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
+    //region PHYSICS
+    for (let [index, particle] of particles.entries()) {
+        try {
+            let force = forceAtPoint(particle.x, particle.y);
+            particle.velocityX += force.x;
+            particle.velocityY += force.y;
+            particle.velocityX *= SLIPERINESS;
+            particle.velocityY *= SLIPERINESS;
+            particle.x += particle.velocityX * SPEED;
+            particle.y += particle.velocityY * SPEED;
+        } catch {
+            particles.splice(index, 1);
+        }
+    }
+    //endregion
 
-    //#region DRAW
-    ctx.strokeStyle = "black";
-    for (let y = 0; y < vectors.length; y++) {
+    //region DRAW
+    /*for (let y = 0; y < vectors.length; y++) {
         for (let x = 0; x < vectors[0].length; x++) {
             let vectorLength = 20;
             ctx.beginPath()
@@ -86,17 +101,13 @@ setInterval(() => {
 
             ctx.fillRect(x * GRID_SIZE - 2, y * GRID_SIZE - 2, 4, 4);
         }
+    }*/
+
+    ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
+    for (let particle of particles) {
+        ctx.fillRect(particle.x, particle.y, 1, 1);
     }
-
-    let force = forceAtPoint(mouseX, mouseY);
-    let mouseVectorLength = 50;
-
-    ctx.strokeStyle = "red";
-    ctx.beginPath()
-    ctx.moveTo(mouseX, mouseY);
-    ctx.lineTo(mouseX + force.x * mouseVectorLength, mouseY + force.y * mouseVectorLength);
-    ctx.stroke()
-    //#endregion
+    //endregion
 }, 1);
 
 document.addEventListener("mousemove", (e) => {
