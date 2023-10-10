@@ -76,22 +76,6 @@ function forceAtPoint(x, y) {
 }
 //endregion
 
-//region DRAW VECTORS
-/*ctx.fillStyle = "white";
-ctx.strokeStyle = "white";
-for (let y = 0; y < vectors.length; y++) {
-    for (let x = 0; x < vectors[0].length; x++) {
-        let vectorLength = 20;
-        ctx.beginPath()
-        ctx.moveTo(x * GRID_SIZE, y * GRID_SIZE);
-        ctx.lineTo(x * GRID_SIZE + vectors[y][x].x * vectorLength, y * GRID_SIZE + vectors[y][x].y * vectorLength);
-        ctx.stroke()
-
-        ctx.fillRect(x * GRID_SIZE - 2, y * GRID_SIZE - 2, 4, 4);
-    }
-}*/
-//endregion
-
 setInterval(() => {
     //region PHYSICS
     for (let [index, particle] of particles.entries()) {

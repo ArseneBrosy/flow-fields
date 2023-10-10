@@ -8,9 +8,9 @@ canvas.height = canvas.clientHeight;
 //region CONSTANTS
 const GRID_SIZE = 20;
 const SLIPERINESS = 0.3;
-const PARTCLE_COUNT = 1000;
-const SPEED = 5;
-const PATH_SIZE = 30;
+const PARTCLE_COUNT = 500;
+const SPEED = 10;
+const PATH_SIZE = 150;
 //endregion
 
 //region VARIABLES
@@ -38,7 +38,8 @@ for (let i = 0; i < PARTCLE_COUNT; i++) {
         velocityX: 0,
         velocityY: 0,
         path: [],
-        dead: false
+        dead: false,
+        lifetime: i
     });
 }
 //endregion
@@ -60,36 +61,12 @@ function lerp(a, b, alpha) {
 }
 
 function forceAtPoint(x, y) {
-    let xIndex = Math.floor(x / GRID_SIZE);
-    let yIndex = Math.floor(y / GRID_SIZE);
-
-    let xAlpha = x % GRID_SIZE / GRID_SIZE;
-    let yAlpha = y % GRID_SIZE / GRID_SIZE;
-
-    let xValue = lerp(vectors[yIndex][xIndex].x, vectors[yIndex][xIndex + 1].x, xAlpha);
-    let yValue = lerp(vectors[yIndex][xIndex].y, vectors[yIndex + 1][xIndex].y, yAlpha);
-
+    let dis = Distance(x, y, mouseX, mouseY);
     return {
-        x: xValue,
-        y: yValue
+        x: (mouseX - x) / dis,
+        y: (mouseY - y) / dis
     }
 }
-//endregion
-
-//region DRAW VECTORS
-/*ctx.fillStyle = "white";
-ctx.strokeStyle = "white";
-for (let y = 0; y < vectors.length; y++) {
-    for (let x = 0; x < vectors[0].length; x++) {
-        let vectorLength = 20;
-        ctx.beginPath()
-        ctx.moveTo(x * GRID_SIZE, y * GRID_SIZE);
-        ctx.lineTo(x * GRID_SIZE + vectors[y][x].x * vectorLength, y * GRID_SIZE + vectors[y][x].y * vectorLength);
-        ctx.stroke()
-
-        ctx.fillRect(x * GRID_SIZE - 2, y * GRID_SIZE - 2, 4, 4);
-    }
-}*/
 //endregion
 
 setInterval(() => {
@@ -100,6 +77,15 @@ setInterval(() => {
                 particle.path.shift();
             } else {
                 particles.splice(index, 1);
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    velocityX: 0,
+                    velocityY: 0,
+                    path: [],
+                    dead: false,
+                    lifetime: PARTCLE_COUNT
+                });
             }
         } else {
             try {
@@ -117,16 +103,12 @@ setInterval(() => {
                 particle.velocityY *= SLIPERINESS;
                 particle.x += particle.velocityX * SPEED;
                 particle.y += particle.velocityY * SPEED;
+                particle.lifetime --;
+                if (particle.lifetime <= 0) {
+                    particle.dead = true;
+                }
             } catch {
                 particle.dead = true;
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    velocityX: 0,
-                    velocityY: 0,
-                    path: [],
-                    dead: false
-                });
             }
         }
     }
