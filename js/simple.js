@@ -73,22 +73,6 @@ function forceAtPoint(x, y) {
 }
 //endregion
 
-//region DRAW VECTORS
-/*ctx.fillStyle = "white";
-ctx.strokeStyle = "white";
-for (let y = 0; y < vectors.length; y++) {
-    for (let x = 0; x < vectors[0].length; x++) {
-        let vectorLength = 20;
-        ctx.beginPath()
-        ctx.moveTo(x * GRID_SIZE, y * GRID_SIZE);
-        ctx.lineTo(x * GRID_SIZE + vectors[y][x].x * vectorLength, y * GRID_SIZE + vectors[y][x].y * vectorLength);
-        ctx.stroke()
-
-        ctx.fillRect(x * GRID_SIZE - 2, y * GRID_SIZE - 2, 4, 4);
-    }
-}*/
-//endregion
-
 setInterval(() => {
     //region PHYSICS
     for (let [index, particle] of particles.entries()) {
@@ -102,20 +86,11 @@ setInterval(() => {
             particle.y += particle.velocityY * SPEED;
         } catch {
             particles.splice(index, 1);
-            /*particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                velocityX: 0,
-                velocityY: 0,
-                color: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.2)`
-            });*/
         }
     }
     //endregion
 
     //region DRAW
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
     for (let particle of particles) {
         ctx.fillRect(particle.x, particle.y, 1, 1);
