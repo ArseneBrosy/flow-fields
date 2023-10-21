@@ -1,6 +1,6 @@
 // Flow Fields
 // by Arsène Brosy
-let canvas = document.getElementById("game");
+let canvas = document.getElementById("display");
 let ctx = canvas.getContext("2d");
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
@@ -13,6 +13,10 @@ let SPEED = 5;
 let PATH_SIZE = 30;
 let PERLIN_ZOOM = 0.01;
 let RESET_CANVAS = true;
+let SHOW_TRAILS = false;
+let BACKGROUND_COLOR = "rgba(0, 0, 0, 1)";
+let PARTICLES_COLOR = "rgba(255, 0, 0, 0.4)";
+let PARTICLES_MULTICLOR = false;
 //endregion
 
 //region VARIABLES

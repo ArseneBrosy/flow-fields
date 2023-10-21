@@ -49,6 +49,10 @@ canvas {
     border: 1px solid black;
 }
 
+#settings input[type=checkbox] {
+    margin-left: 0;
+}
+
 #settings input[type="number"],
 #settings input[type="text"] {
     padding: 0 2px;
