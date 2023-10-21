@@ -9,30 +9,23 @@
 body {
     height: 100vh;
     width: 100vw;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 canvas {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 4px);
 }
 
 #settings {
     position: absolute;
-    width: 80vw;
-    height: 80vh;
     background-color: white;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    width: 100vw;
     align-items: center;
     border-radius: 10px;
-    padding: 10px;
-}
-
-#settings h1 {
-    width: 100%;
-    text-align: center;
+    padding: 30px 100px;
 }
 
 #settings strong {
@@ -65,10 +58,16 @@ canvas {
     height: 25px;
 }
 
-#settings h2:not(:first-of-type) {
+#settings h2 {
     margin-top: 20px;
 }
 
 button {
     cursor: pointer;
+    padding: 5px 30px;
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-top: 20px;
 }

@@ -20,8 +20,6 @@ let PARTICLES_MULTICOLOR = false;
 let REGENERATE_PARTICLES = false;
 //endregion
 
-noise.seed(Math.random());
-
 //region VARIABLES
 let particles = [];
 let vectors = [];
@@ -58,6 +56,8 @@ function forceAtPoint(x, y) {
 
 function start() {
     //region VECTORS
+    noise.seed(Math.random());
+    vectors = [];
     for (let y = 0; y <= Math.ceil(canvas.height / GRID_SIZE); y++) {
         let newLine = [];
         for (let x = 0; x <= Math.ceil(canvas.width / GRID_SIZE); x++) {
@@ -68,6 +68,7 @@ function start() {
     //endregion
 
     //region PARTICLES
+    particles = [];
     for (let i = 0; i < PARTICLE_COUNT; i++) {
         particles.push({
             x: Math.random() * canvas.width,
@@ -82,7 +83,11 @@ function start() {
     //endregion
 
     document.querySelector("#display").style.backgroundColor = BACKGROUND_COLOR;
+    document.querySelector("#display").style.height = "100vh";
+    document.querySelector("body").style.overflowY = "hidden";
     document.querySelector("#settings").style.display = "none";
+    window.scrollTo(0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     //region DRAW VECTORS
     /*ctx.fillStyle = "white";
@@ -178,3 +183,9 @@ function start() {
         //endregion
     }, 1);
 }
+
+document.addEventListener("keydown", (e) => {
+    if (e.code === "Space") {
+        start();
+    }
+});
