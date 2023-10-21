@@ -11,7 +11,7 @@ document.querySelector("#reset-screen").addEventListener("change", (e) => {
 
 document.querySelector("#show-trails").addEventListener("change", (e) => {
   SHOW_TRAILS = e.target.checked;
-  document.querySelector("#trails-size-parameter").style.display = e.target.checked ? "block" : "none"
+  document.querySelector("#trails-size-parameter").style.display = e.target.checked ? "block" : "none";
 });
 
 document.querySelector("#trails-size").addEventListener("change", (e) => {
@@ -55,5 +55,26 @@ document.querySelector("#particles-opacity").addEventListener("change", (e) => {
 });
 
 document.querySelector("#particles-multicolor").addEventListener("change", (e) => {
-  PARTICLES_MULTICLOR = e.target.checked;
+  PARTICLES_MULTICOLOR = e.target.checked;
+  document.querySelector("#particles-color-parameter").style.display = e.target.checked ? "none" : "block";
+});
+
+document.querySelector("#perlin-zoom").addEventListener("change", (e) => {
+  PERLIN_ZOOM = parseInt(e.target.value) / 1000;
+});
+
+document.querySelector("#particles-count").addEventListener("change", (e) => {
+  PARTICLE_COUNT = e.target.value;
+});
+
+document.querySelector("#speed").addEventListener("change", (e) => {
+  SPEED = e.target.value;
+});
+
+document.querySelector("#slipperiness").addEventListener("change", (e) => {
+  SLIPPERINESS = e.target.value;
+});
+
+document.querySelector("#regenerate-particles").addEventListener("change", (e) => {
+  REGENERATE_PARTICLES = e.target.value;
 });

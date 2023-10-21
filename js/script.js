@@ -16,7 +16,8 @@ let RESET_CANVAS = true;
 let SHOW_TRAILS = false;
 let BACKGROUND_COLOR = "rgba(0, 0, 0, 1)";
 let PARTICLES_COLOR = "rgba(255, 0, 0, 0.4)";
-let PARTICLES_MULTICLOR = false;
+let PARTICLES_MULTICOLOR = false;
+let REGENERATE_PARTICLES = false;
 //endregion
 
 //region VARIABLES
