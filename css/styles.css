@@ -68,3 +68,7 @@ canvas {
 #settings h2:not(:first-of-type) {
     margin-top: 20px;
 }
+
+button {
+    cursor: pointer;
+}

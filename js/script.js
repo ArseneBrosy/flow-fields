@@ -8,11 +8,11 @@ canvas.height = canvas.clientHeight;
 //region CONSTANTS
 let GRID_SIZE = 20;
 let SLIPPERINESS = 0.3;
-let PARTICLE_COUNT = 1000;
+let PARTICLE_COUNT = 10000;
 let SPEED = 5;
 let PATH_SIZE = 30;
 let PERLIN_ZOOM = 0.01;
-let RESET_CANVAS = true;
+let RESET_CANVAS = false;
 let SHOW_TRAILS = false;
 let BACKGROUND_COLOR = "rgba(0, 0, 0, 1)";
 let PARTICLES_COLOR = "rgba(255, 0, 0, 0.4)";
@@ -20,13 +20,12 @@ let PARTICLES_MULTICOLOR = false;
 let REGENERATE_PARTICLES = false;
 //endregion
 
-//region VARIABLES
-// mouse
-let mouseX = 0;
-let mouseY = 0;
-//endregion
-
 noise.seed(Math.random());
+
+//region VARIABLES
+let particles = [];
+let vectors = [];
+//endregion
 
 //region FUNCTIONS
 function degToVector(degree) {
@@ -59,7 +58,6 @@ function forceAtPoint(x, y) {
 
 function start() {
     //region VECTORS
-    let vectors = [];
     for (let y = 0; y <= Math.ceil(canvas.height / GRID_SIZE); y++) {
         let newLine = [];
         for (let x = 0; x <= Math.ceil(canvas.width / GRID_SIZE); x++) {
@@ -70,7 +68,6 @@ function start() {
     //endregion
 
     //region PARTICLES
-    let particles = [];
     for (let i = 0; i < PARTICLE_COUNT; i++) {
         particles.push({
             x: Math.random() * canvas.width,
@@ -78,10 +75,14 @@ function start() {
             velocityX: 0,
             velocityY: 0,
             path: [],
-            dead: false
+            dead: false,
+            color: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.2)`
         });
     }
     //endregion
+
+    document.querySelector("#display").style.backgroundColor = BACKGROUND_COLOR;
+    document.querySelector("#settings").style.display = "none";
 
     //region DRAW VECTORS
     /*ctx.fillStyle = "white";
@@ -111,12 +112,14 @@ function start() {
             } else {
                 try {
                     let force = forceAtPoint(particle.x, particle.y);
-                    particle.path.push({
-                        x: particle.x,
-                        y: particle.y
-                    });
-                    if (particle.path.length > PATH_SIZE) {
-                        particle.path.shift();
+                    if (SHOW_TRAILS) {
+                        particle.path.push({
+                            x: particle.x,
+                            y: particle.y
+                        });
+                        if (particle.path.length > PATH_SIZE) {
+                            particle.path.shift();
+                        }
                     }
                     particle.velocityX += force.x;
                     particle.velocityY += force.y;
@@ -126,14 +129,17 @@ function start() {
                     particle.y += particle.velocityY * SPEED;
                 } catch {
                     particle.dead = true;
-                    particles.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        velocityX: 0,
-                        velocityY: 0,
-                        path: [],
-                        dead: false
-                    });
+                    if (REGENERATE_PARTICLES) {
+                        particles.push({
+                            x: Math.random() * canvas.width,
+                            y: Math.random() * canvas.height,
+                            velocityX: 0,
+                            velocityY: 0,
+                            path: [],
+                            dead: false,
+                            color: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.2)`
+                        });
+                    }
                 }
             }
         }
@@ -144,23 +150,31 @@ function start() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        ctx.strokeStyle = "rgba(255, 0, 0, 0.4)";
-        for (let particle of particles) {
-            if (particle.path.length === 0) {
-                continue;
+        ctx.strokeStyle = PARTICLES_COLOR;
+        ctx.fillStyle = PARTICLES_COLOR;
+        if (SHOW_TRAILS) {
+            for (let particle of particles) {
+                if (PARTICLES_MULTICOLOR) {
+                    ctx.strokeStyle = particle.color;
+                }
+                if (particle.path.length === 0) {
+                    continue;
+                }
+                ctx.beginPath()
+                ctx.moveTo(particle.path[0].x, particle.path[0].y);
+                for (let pos of particle.path) {
+                    ctx.lineTo(pos.x, pos.y);
+                }
+                ctx.stroke();
             }
-            ctx.beginPath()
-            ctx.moveTo(particle.path[0].x, particle.path[0].y);
-            for (let pos of particle.path) {
-                ctx.lineTo(pos.x, pos.y);
+        } else {
+            for (let particle of particles) {
+                if (PARTICLES_MULTICOLOR) {
+                    ctx.fillStyle = particle.color;
+                }
+                ctx.fillRect(particle.x, particle.y, 1, 1);
             }
-            ctx.stroke();
         }
         //endregion
     }, 1);
 }
-
-document.addEventListener("mousemove", (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-});
