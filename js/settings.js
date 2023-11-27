@@ -9,6 +9,11 @@ document.querySelector("#reset-screen").addEventListener("change", (e) => {
   RESET_CANVAS = e.target.checked;
 });
 
+document.querySelector("#screen-shade").addEventListener("change", (e) => {
+  SCREEN_SHADE = parseFloat(e.target.value);
+  document.querySelector("#screen-shade-text").innerHTML = e.target.value;
+});
+
 document.querySelector("#show-trails").addEventListener("change", (e) => {
   SHOW_TRAILS = e.target.checked;
   document.querySelector("#trails-size-parameter").style.display = e.target.checked ? "block" : "none";

@@ -13,6 +13,7 @@ let SPEED = 5;
 let PATH_SIZE = 30;
 let PERLIN_ZOOM = 0.01;
 let RESET_CANVAS = false;
+let SCREEN_SHADE = 1;
 let SHOW_TRAILS = false;
 let BACKGROUND_COLOR = "rgba(0, 0, 0, 1)";
 let PARTICLES_COLOR = "rgba(255, 0, 0, 0.4)";
@@ -153,6 +154,15 @@ function start() {
         //region DRAW
         if (RESET_CANVAS) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        if (SCREEN_SHADE < 1) {
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                data[i + 3] *= SCREEN_SHADE;
+            }
+            ctx.putImageData(imageData, 0, 0);
         }
 
         ctx.strokeStyle = PARTICLES_COLOR;
